@@ -236,6 +236,18 @@ class _Front3DLoader:
 
                     # as this material was just created the material is just append it to the empty list
                     obj.add_material(mat)
+                elif used_mat["jid"]:
+                    # Create a new material
+                    mat = MaterialLoaderUtility.create(name=used_obj_name + "_material")
+                    principled_node = mat.get_the_one_node_with_type("BsdfPrincipled")
+                    if used_mat["color"]:
+                        principled_node.inputs["Base Color"].default_value = mathutils.Vector(
+                            used_mat["color"]) / 255.0
+                    hash_folder = f'{front_3D_texture_path}/{used_mat["jid"]}'
+                    used_image = _Front3DLoader.get_used_image(hash_folder, saved_images)
+                    mat.set_principled_shader_value("Base Color", used_image)
+                    obj.add_material(mat)
+                    used_materials_based_on_texture[hash_folder] = mat
 
             # extract the vertices from the mesh_data
             vert = [float(ele) for ele in mesh_data["xyz"]]

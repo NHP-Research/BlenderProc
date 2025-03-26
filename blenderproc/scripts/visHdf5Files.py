@@ -144,7 +144,10 @@ def vis_data(key, data, full_hdf5_data=None, file_label="", rgb_keys=None, flow_
         if save_to_file is None:
             plt.imshow(data)
         else:
-            plt.imsave(save_to_file, data)
+            if data.dtype == np.float32:
+                plt.imsave(save_to_file, data.clip(0, 1))
+            else:
+                plt.imsave(save_to_file, data)
             plt.close()
     else:
         if save_to_file is None:
