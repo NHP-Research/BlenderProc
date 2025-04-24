@@ -102,12 +102,12 @@ class Front3DPointInRoomSampler:
         width = np.round(width * scale).astype(int)
         height = np.round(height * scale).astype(int)
 
-        fig, axs = plt.subplots(1, 3, figsize=(18, 6))
-        axs[0].axis('equal')
-        axs[1].axis('equal')
-        axs[2].axis('equal')
-        rect = plt.Rectangle((min_corner[0], min_corner[1]), max_corner[0] - min_corner[0], max_corner[1] - min_corner[1], linewidth=1, edgecolor='r', facecolor='none')
-        axs[1].add_patch(rect)
+        # fig, axs = plt.subplots(1, 3, figsize=(18, 6))
+        # axs[0].axis('equal')
+        # axs[1].axis('equal')
+        # axs[2].axis('equal')
+        # rect = plt.Rectangle((min_corner[0], min_corner[1]), max_corner[0] - min_corner[0], max_corner[1] - min_corner[1], linewidth=1, edgecolor='r', facecolor='none')
+        # axs[1].add_patch(rect)
 
         sub_rect = np.array([width, height, 0, 0])
 
@@ -125,7 +125,7 @@ class Front3DPointInRoomSampler:
             if obj_z > room.get_location()[2] + h:
                 continue
 
-            axs[1].add_patch(plt.Rectangle((obj_min[0], obj_min[1]), obj_max[0] - obj_min[0], obj_max[1] - obj_min[1], linewidth=1, edgecolor='g', facecolor='g'))
+            # axs[1].add_patch(plt.Rectangle((obj_min[0], obj_min[1]), obj_max[0] - obj_min[0], obj_max[1] - obj_min[1], linewidth=1, edgecolor='g', facecolor='g'))
 
             left = np.round((obj_min[0] - min_corner[0]) * scale).astype(int) 
             right = np.round((obj_max[0] - min_corner[0]) * scale).astype(int)
@@ -158,24 +158,24 @@ class Front3DPointInRoomSampler:
         position[1] += sub_rect[0]
         position = position / scale
 
-        # Original floor
-        axs[0].imshow(distance, origin='lower')
-        axs[0].set_title('Original Floor')
-        axs[0].scatter([position[1] * scale], [position[0] * scale], color='red')
+        # # Original floor
+        # axs[0].imshow(distance, origin='lower')
+        # axs[0].set_title('Original Floor')
+        # axs[0].scatter([position[1] * scale], [position[0] * scale], color='red')
         
-        # Draw a rectangle from min_corner to max_corner
+        # # Draw a rectangle from min_corner to max_corner
 
-        # Plot the point (min_corner[0] + position[1], min_corner[1] + position[0])
-        axs[1].add_patch(plt.Rectangle((min_corner[0] + sub_rect[0] / scale, min_corner[1] + sub_rect[1] / scale), (sub_rect[2] - sub_rect[0]) / scale, (sub_rect[3] - sub_rect[1]) / scale, linewidth=1, edgecolor='y', facecolor='none'))
-        axs[1].scatter([min_corner[0] + position[1]], [min_corner[1] + position[0]], color='blue')
+        # # Plot the point (min_corner[0] + position[1], min_corner[1] + position[0])
+        # axs[1].add_patch(plt.Rectangle((min_corner[0] + sub_rect[0] / scale, min_corner[1] + sub_rect[1] / scale), (sub_rect[2] - sub_rect[0]) / scale, (sub_rect[3] - sub_rect[1]) / scale, linewidth=1, edgecolor='y', facecolor='none'))
+        # axs[1].scatter([min_corner[0] + position[1]], [min_corner[1] + position[0]], color='blue')
 
-        axs[1].set_title(f'Room: {room.get_name()}')
+        # axs[1].set_title(f'Room: {room.get_name()}')
 
-        axs[2].imshow(circle_distance, origin='lower')
+        # axs[2].imshow(circle_distance, origin='lower')
 
-        plt.savefig(f'floor_{room.get_name()}.png')
-        plt.close()
-        print("Saved image:", f'floor_{room.get_name()}.png')
+        # plt.savefig(f'floor_{room.get_name()}.png')
+        # plt.close()
+        # print("Saved image:", f'floor_{room.get_name()}.png')
 
         alpha = 1
 

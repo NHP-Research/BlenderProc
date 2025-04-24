@@ -12,7 +12,7 @@ from blenderproc.python.utility.CollisionUtility import CollisionUtility
 def replace_objects(objects_to_be_replaced: List[MeshObject], objects_to_replace_with: List[MeshObject],
                     ignore_collision_with: Optional[List[MeshObject]] = None, replace_ratio: float = 1,
                     copy_properties: bool = True, max_tries: int = 100,
-                    relative_pose_sampler: Callable[[MeshObject], None] = None):
+                    relative_pose_sampler: Callable[[MeshObject], None] = None) -> List[MeshObject]:
     """
     Replaces mesh objects with another mesh objects and scales them accordingly, the replaced objects and the
     objects to replace with in following steps:
@@ -31,6 +31,7 @@ def replace_objects(objects_to_be_replaced: List[MeshObject], objects_to_replace
     :param relative_pose_sampler: A function that randomly perturbs the pose of the object to replace with
                                   (after it has been aligned to the object to replace).
     """
+
     if ignore_collision_with is None:
         ignore_collision_with = []
 
@@ -47,6 +48,8 @@ def replace_objects(objects_to_be_replaced: List[MeshObject], objects_to_replace
     objects_to_be_replaced = random.sample(objects_to_be_replaced, k=int(len(objects_to_be_replaced) * replace_ratio))
     if len(objects_to_be_replaced) == 0:
         print("Warning: The amount of objects, which should be replace is zero!")
+
+    replaced_objects = []
 
     # Go over all objects we should replace
     for current_object_to_be_replaced in objects_to_be_replaced:
@@ -70,15 +73,21 @@ def replace_objects(objects_to_be_replaced: List[MeshObject], objects_to_replace
 
                 print('Replaced ', current_object_to_be_replaced.get_name(), ' by ', duplicate_new_object.get_name())
 
+                # Add the new object to the list of replaced objects
+                replaced_objects.append(duplicate_new_object)
+
                 # Delete the original object and remove it from the list
-                check_collision_with.remove(current_object_to_be_replaced)
+                if current_object_to_replace_with in objects_to_replace_with:
+                    objects_to_replace_with.remove(current_object_to_replace_with)
                 current_object_to_be_replaced.delete()
                 break
             tries += 1
 
         if tries == max_tries:
             print("Could not replace " + current_object_to_be_replaced.get_name())
-
+    
+    # Return the list of replaced objects
+    return replaced_objects
 
 class _ObjectReplacer:
     """ Replaces mesh objects with another mesh objects and scales them accordingly, the replaced objects and the
